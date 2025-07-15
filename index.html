@@ -107,35 +107,47 @@
       font-size: 1.8rem;
       font-weight: bold;
     }
+
+    /* 📱 Mobile View Adjustments */
     @media (max-width: 600px) {
-  .live-title {
-    font-size: 1.2rem;
-    line-height: 1.6;
-  }
+      .live-title {
+        font-size: 1.4rem;
+        line-height: 1.8;
+        padding: 0 1rem;
+      }
 
-  .conference-title {
-    font-size: 1.4rem;
-  }
+      .conference-title {
+        font-size: 1.7rem;
+      }
 
-  .conference-details {
-    font-size: 1.1rem;
-  }
+      .conference-details {
+        font-size: 1.3rem;
+      }
 
-  .button, .faded-box {
-    font-size: 1.1rem;
-    padding: 24px;
-    line-height: 1.8;
-  }
+      .button, .faded-box {
+        font-size: 2rem;
+        padding: 30px;
+        line-height: 2.2;
+      }
 
-  .section-title {
-    font-size: 1.4rem;
-  }
+      .section-title {
+        font-size: 1.5rem;
+        margin-top: 2.5rem;
+      }
 
-  .header img {
-    width: 100px;
-  }
-}
+      .header img {
+        width: 120px;
+      }
 
+      .marquee-bar {
+        padding: 12px 8px;
+      }
+
+      marquee {
+        font-size: 1.3rem;
+        padding: 0 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -146,7 +158,7 @@
     <div class="conference-details">JULY 20–22, 2025    RADISSON BLU, MARATHALLI, BENGALURU</div>
   </div>
 
-  <!-- Blinking marquee message -->
+  <!-- 🔴 LIVE marquee -->
   <div class="marquee-bar">
     <marquee behavior="scroll" direction="left" scrollamount="6">
       <div id="liveNow" class="live-title"></div>
@@ -252,7 +264,7 @@
     }
 
     render();
-    setInterval(render, 60000); // Refresh every 60 seconds
+    setInterval(render, 60000);
   </script>
 </body>
 </html>
