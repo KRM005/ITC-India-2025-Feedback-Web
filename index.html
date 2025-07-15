@@ -14,47 +14,62 @@
       overflow-x: hidden;
       padding-bottom: 50px;
     }
+
     body::before {
       content: "";
       background-image: url('backgroundimage.png');
       background-size: cover;
       background-position: center;
-      opacity: 0.3;
+      opacity: 0.1;
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: -1;
     }
+
     .header {
       background: rgba(0,0,0,0.6);
       padding: 30px 10px;
     }
+
     .header img {
       width: 150px;
       height: auto;
       display: block;
       margin: 0 auto 15px;
     }
+
     .conference-title {
       font-size: 2rem;
       font-weight: bold;
     }
+
     .conference-details {
       font-size: 1.5rem;
       margin-top: 8px;
       white-space: pre;
     }
+
+    .marquee-bar {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 0;
+      margin-top: 10px;
+    }
+
     .live-title {
       color: #ff4444;
       font-weight: bold;
-      font-size: 1.8rem;
+      font-size: 1.3rem;
       animation: blink 1s infinite;
-      margin: 1.5rem 0;
     }
+
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+      50% { opacity: 0.5; }
     }
+
     .button, .faded-box {
       display: block;
       margin: 12px auto;
@@ -67,22 +82,26 @@
       text-align: left;
       transition: transform 0.2s;
     }
+
     .button {
       background-color: #007bff;
       color: white;
       text-decoration: none;
       cursor: pointer;
     }
+
     .button:hover {
       background-color: #0056b3;
       transform: scale(1.02);
     }
+
     .faded-box {
       background-color: rgba(255, 255, 255, 0.2);
       color: white;
       cursor: not-allowed;
       opacity: 0.9;
     }
+
     .section-title {
       margin-top: 2rem;
       font-size: 1.8rem;
@@ -98,60 +117,113 @@
     <div class="conference-details">JULY 20–22, 2025    RADISSON BLU, MARATHALLI, BENGALURU</div>
   </div>
 
-  <div id="liveNow" class="live-title"></div>
+  <!-- Blinking marquee message -->
+  <div class="marquee-bar">
+    <marquee behavior="scroll" direction="left" scrollamount="6">
+      <div id="liveNow" class="live-title"></div>
+    </marquee>
+  </div>
+
   <div id="liveButtons"></div>
 
-  <div class="section-title">Other Sessions</div>
-  <div id="otherButtons"></div>
+  <div class="section-title">Upcoming Sessions</div>
+  <div id="upcomingButtons"></div>
+
+  <div class="section-title">Past Sessions</div>
+  <div id="pastButtons"></div>
 
   <script>
     const sessions = [
-      { title: "Tutorial 1", date: "2025-07-15", start: "00:00", end: "23:59", formUrl: "...", speaker: "Dr. A. Kumar", venue: "Grand Victoria 1" },
-      { title: "Keynote 1", date: "2025-07-21", start: "09:00", end: "10:00", formUrl: "...", speaker: "Raja Swaminathan", venue: "Main Hall" },
-      // ...add others similarly
+      {
+        title: "Tutorial 1",
+        date: "2025-07-15",
+        start: "00:00",
+        end: "23:59",
+        formUrl: "https://forms.gle/YOURFORM1",
+        speaker: "Dr. A. Kumar",
+        venue: "Grand Victoria 1"
+      },
+      {
+        title: "Keynote 1",
+        date: "2025-07-21",
+        start: "09:00",
+        end: "10:00",
+        formUrl: "https://forms.gle/YOURFORM2",
+        speaker: "Raja Swaminathan",
+        venue: "Main Hall"
+      },
+      {
+        title: "Poster Session",
+        date: "2025-07-22",
+        start: "11:00",
+        end: "12:30",
+        formUrl: "https://forms.gle/YOURFORM3",
+        speaker: "Various Presenters",
+        venue: "Exhibition Hall"
+      }
     ];
 
     function getISTNow() {
       return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
     }
 
-    function isLive(session, now) {
-      const sessionDate = new Date(`${session.date}T00:00:00`);
-      const today = new Date(now.toISOString().split("T")[0] + "T00:00:00");
-      if (sessionDate.getTime() !== today.getTime()) return false;
-
-      const [sh, sm] = session.start.split(":").map(Number);
-      const [eh, em] = session.end.split(":").map(Number);
-      const start = new Date(sessionDate); start.setHours(sh, sm);
-      const end = new Date(sessionDate); end.setHours(eh, em + 10);
-
-      return now >= start && now <= end;
-    }
-
     function render() {
       const now = getISTNow();
       const live = document.getElementById("liveButtons");
-      const other = document.getElementById("otherButtons");
+      const upcoming = document.getElementById("upcomingButtons");
+      const past = document.getElementById("pastButtons");
       const title = document.getElementById("liveNow");
-      live.innerHTML = ""; other.innerHTML = "";
+
+      live.innerHTML = "";
+      upcoming.innerHTML = "";
+      past.innerHTML = "";
+
       let liveCount = 0;
 
       sessions.forEach(s => {
-        const html = `<strong>${s.title} (${s.date})</strong><br>🗣️ ${s.speaker}<br>📍 ${s.venue}`;
-        if (isLive(s, now)) {
+        const html = `
+          <strong>${s.title} (${s.date})</strong><br>
+          ⏰ ${s.start} – ${s.end}<br>
+          🗣️ ${s.speaker}<br>
+          📍 ${s.venue}
+        `;
+
+        const sessionDate = new Date(`${s.date}T00:00:00`);
+        const [sh, sm] = s.start.split(":").map(Number);
+        const [eh, em] = s.end.split(":").map(Number);
+        const start = new Date(sessionDate);
+        start.setHours(sh, sm, 0);
+        const end = new Date(sessionDate);
+        end.setHours(eh, em + 10, 0); // 10 min grace
+
+        if (now >= start && now <= end) {
           const a = document.createElement("a");
-          a.className = "button"; a.href = s.formUrl; a.target = "_blank"; a.innerHTML = html;
-          live.appendChild(a); liveCount++;
+          a.className = "button";
+          a.href = s.formUrl;
+          a.target = "_blank";
+          a.innerHTML = html;
+          live.appendChild(a);
+          liveCount++;
+        } else if (now < start) {
+          const div = document.createElement("div");
+          div.className = "faded-box";
+          div.innerHTML = html;
+          upcoming.appendChild(div);
         } else {
-          const d = document.createElement("div");
-          d.className = "faded-box"; d.innerHTML = html;
-          other.appendChild(d);
+          const div = document.createElement("div");
+          div.className = "faded-box";
+          div.innerHTML = html;
+          past.appendChild(div);
         }
       });
-      title.innerHTML = liveCount > 0 ? "🔴 LIVE NOW" : "";
+
+      title.innerHTML = liveCount > 0
+        ? "🔴 LIVE NOW: Click on the session you participated in to provide your valuable feedback. The link will remain active for 10 minutes post-session."
+        : "";
     }
 
-    render(); setInterval(render, 60000);
+    render();
+    setInterval(render, 60000); // Refresh every 60 seconds
   </script>
 </body>
 </html>
