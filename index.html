@@ -148,6 +148,27 @@
         padding: 0 12px;
       }
     }
+  .site-footer {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 10px;
+  color: #ffffff;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.site-footer a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .site-footer {
+    font-size: 1.1rem;
+    padding: 24px 15px;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -609,5 +630,11 @@
     render();
     setInterval(render, 60000);
   </script>
+  <!-- Footer -->
+<footer class="site-footer">
+  <p>For more info: <a href="https://itctestweekindia.org/" target="_blank">https://itctestweekindia.org/</a></p>
+  <p>2025 © ITC Test Week India | All rights reserved</p>
+</footer>
+
 </body>
 </html>
