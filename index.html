@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <title>ITC India 2025 – Session Feedback</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
       background-color: #010D24;
       color: white;
       text-align: center;
-      overflow-x: hidden;
-      padding-bottom: 50px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     body::before {
@@ -103,7 +105,7 @@
       color: #ffffff;
       font-size: 1rem;
       text-align: center;
-      margin-top: 3rem;
+      margin-top: auto;
     }
 
     .site-footer a {
@@ -130,7 +132,6 @@
         font-size: 2rem;
         padding: 30px;
         line-height: 2.2;
-        text-align: center;
       }
 
       .header img {
@@ -152,7 +153,6 @@
     <div class="conference-details">JULY 20–22, 2025    RADISSON BLU, MARATHAHALLI, BENGALURU</div>
   </div>
 
-  <!-- 🔴 LIVE marquee -->
   <div class="marquee-bar" id="marqueeBar">
     <marquee behavior="scroll" direction="left" scrollamount="6">
       <div id="liveNow" class="live-title"></div>
@@ -227,7 +227,7 @@
         const start = new Date(sessionDate);
         const end = new Date(sessionDate);
         start.setHours(sh, sm);
-        end.setHours(eh, em + 10); // 10 min grace
+        end.setHours(eh, em + 10); // grace period
 
         if (now >= start && now <= end) {
           const a = document.createElement("a");
@@ -242,12 +242,12 @@
 
       if (liveCount > 0) {
         marquee.style.display = "block";
-        liveMessage.innerHTML = "🔴 LIVE NOW: Click on the session you have attended to provide your valuable feedback. The link will remain active for 10 minutes post-session.";
+        liveMessage.innerHTML = "🔴 LIVE NOW: Click on the session you participated in to provide your valuable feedback. The link will remain active for 10 minutes post-session.";
         noLiveText.innerText = "";
       } else {
         marquee.style.display = "none";
         liveMessage.innerHTML = "";
-        noLiveText.innerText = "There are no live sessions at the moment.";
+        noLiveText.innerText = "There are currently no sessions accepting feedback. Please check back later.";
       }
     }
 
