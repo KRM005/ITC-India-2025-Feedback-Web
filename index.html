@@ -36,7 +36,6 @@
 
     .header img {
       width: 150px;
-      height: auto;
       display: block;
       margin: 0 auto 15px;
     }
@@ -55,8 +54,8 @@
     .marquee-bar {
       background-color: #00011e;
       padding: 20px 0;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin: 20px 0;
+      display: none;
     }
 
     .live-title {
@@ -71,7 +70,7 @@
       50% { opacity: 0.7; }
     }
 
-    .button, .faded-box {
+    .button {
       display: block;
       margin: 12px auto;
       padding: 20px;
@@ -80,15 +79,12 @@
       font-size: 1.8rem;
       line-height: 1.6;
       border-radius: 8px;
-      text-align: left;
-      transition: transform 0.2s;
-    }
-
-    .button {
       background-color: #0074F1;
       color: white;
       text-decoration: none;
       cursor: pointer;
+      text-align: left;
+      transition: transform 0.2s;
     }
 
     .button:hover {
@@ -96,59 +92,10 @@
       transform: scale(1.02);
     }
 
-    .faded-box {
-      background-color: rgba(255, 255, 255, 0.2);
-      color: white;
-      cursor: not-allowed;
-      opacity: 0.9;
-    }
-
-    .section-title {
-      margin-top: 2rem;
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      .live-title {
-        font-size: 1.4rem;
-        line-height: 1.8;
-        padding: 0 1rem;
-      }
-
-      .conference-title {
-        font-size: 1.7rem;
-      }
-
-      .conference-details {
-        font-size: 1.3rem;
-      }
-
-      .button, .faded-box {
-        font-size: 2rem;
-        padding: 30px;
-        line-height: 2.2;
-      }
-
-      .section-title {
-        font-size: 1.5rem;
-        margin-top: 2.5rem;
-      }
-
-      .header img {
-        width: 120px;
-      }
-
-      .marquee-bar {
-        padding: 24px 8px;
-        margin-top: 24px;
-        margin-bottom: 24px;
-      }
-
-      marquee {
-        font-size: 1.3rem;
-        padding: 0 12px;
-      }
+    .no-live {
+      font-size: 1.6rem;
+      margin-top: 30px;
+      color: #ccc;
     }
 
     .site-footer {
@@ -166,6 +113,30 @@
     }
 
     @media (max-width: 600px) {
+      .live-title {
+        font-size: 1.4rem;
+        line-height: 1.8;
+        padding: 0 1rem;
+      }
+
+      .conference-title {
+        font-size: 1.7rem;
+      }
+
+      .conference-details {
+        font-size: 1.3rem;
+      }
+
+      .button {
+        font-size: 2rem;
+        padding: 30px;
+        line-height: 2.2;
+      }
+
+      .header img {
+        width: 120px;
+      }
+
       .site-footer {
         font-size: 1.1rem;
         padding: 24px 15px;
@@ -174,25 +145,27 @@
   </style>
 </head>
 <body>
+
   <div class="header">
     <img src="logo.png" alt="ITC India Logo" />
     <div class="conference-title">9<sup>th</sup> IEEE International Test Conference India 2025</div>
-    <div class="conference-details">JULY 20–22, 2025     RADISSON BLU, MARATHAHALLI, BENGALURU</div>
+    <div class="conference-details">JULY 20–22, 2025    RADISSON BLU, MARATHAHALLI, BENGALURU</div>
   </div>
 
-  <div class="marquee-bar">
+  <!-- 🔴 LIVE marquee -->
+  <div class="marquee-bar" id="marqueeBar">
     <marquee behavior="scroll" direction="left" scrollamount="6">
       <div id="liveNow" class="live-title"></div>
     </marquee>
   </div>
 
   <div id="liveButtons"></div>
+  <div id="noLiveText" class="no-live"></div>
 
-  <div class="section-title">Upcoming Sessions</div>
-  <div id="upcomingButtons"></div>
-
-  <div class="section-title">Past Sessions</div>
-  <div id="pastButtons"></div>
+  <footer class="site-footer">
+    <p>For more info: <a href="https://itctestweekindia.org/" target="_blank">https://itctestweekindia.org/</a></p>
+    <p>2025 © ITC Test Week India | All rights reserved</p>
+  </footer>
 
   <script>
     const sessions = [
@@ -239,65 +212,47 @@
 
     function render() {
       const now = getISTNow();
-      const live = document.getElementById("liveButtons");
-      const upcoming = document.getElementById("upcomingButtons");
-      const past = document.getElementById("pastButtons");
-      const title = document.getElementById("liveNow");
+      const liveContainer = document.getElementById("liveButtons");
+      const liveMessage = document.getElementById("liveNow");
+      const marquee = document.getElementById("marqueeBar");
+      const noLiveText = document.getElementById("noLiveText");
 
-      live.innerHTML = "";
-      upcoming.innerHTML = "";
-      past.innerHTML = "";
-
+      liveContainer.innerHTML = "";
       let liveCount = 0;
 
       sessions.forEach(s => {
-        const html = `
-          <strong>${s.title}</strong><br>
-          🗓️ ${s.date}<br>
-          ⏰ ${s.start} – ${s.end}
-        `;
-
         const sessionDate = new Date(`${s.date}T00:00:00`);
         const [sh, sm] = s.start.split(":").map(Number);
         const [eh, em] = s.end.split(":").map(Number);
         const start = new Date(sessionDate);
-        start.setHours(sh, sm, 0);
         const end = new Date(sessionDate);
-        end.setHours(eh, em + 10, 0);
+        start.setHours(sh, sm);
+        end.setHours(eh, em + 10); // grace
 
         if (now >= start && now <= end) {
           const a = document.createElement("a");
           a.className = "button";
           a.href = s.formUrl;
           a.target = "_blank";
-          a.innerHTML = html;
-          live.appendChild(a);
+          a.innerHTML = `🔹 ${s.title}`;
+          liveContainer.appendChild(a);
           liveCount++;
-        } else if (now < start) {
-          const div = document.createElement("div");
-          div.className = "faded-box";
-          div.innerHTML = html;
-          upcoming.appendChild(div);
-        } else {
-          const div = document.createElement("div");
-          div.className = "faded-box";
-          div.innerHTML = html;
-          past.appendChild(div);
         }
       });
 
-      title.innerHTML = liveCount > 0
-        ? "🔴 LIVE NOW: Click on the session you participated in to provide your valuable feedback. The link will remain active for 10 minutes post-session."
-        : "";
+      if (liveCount > 0) {
+        marquee.style.display = "block";
+        liveMessage.innerHTML = "🔴 LIVE NOW: Click on the session you have atteneded to provide your valuable feedback. The link will remain active for 10 minutes post-session.";
+        noLiveText.innerText = "";
+      } else {
+        marquee.style.display = "none";
+        liveMessage.innerHTML = "";
+        noLiveText.innerText = "There are no live sessions at the moment.";
+      }
     }
 
     render();
     setInterval(render, 60000);
   </script>
-
-  <footer class="site-footer">
-    <p>For more info: <a href="https://itctestweekindia.org/" target="_blank">https://itctestweekindia.org/</a></p>
-    <p>2025 © ITC Test Week India | All rights reserved</p>
-  </footer>
 </body>
 </html>
