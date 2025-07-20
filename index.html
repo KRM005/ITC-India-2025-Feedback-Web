@@ -10,7 +10,6 @@
       background-color: #010D24;
       color: white;
       text-align: center;
-      position: relative;
       overflow-x: hidden;
       padding-bottom: 50px;
     }
@@ -72,18 +71,18 @@
 
     .button {
       display: block;
-      margin: 12px auto;
-      padding: 20px;
-      width: 95%;
+      margin: 15px auto;
+      padding: 25px;
+      width: 90%;
       max-width: 600px;
-      font-size: 1.8rem;
-      line-height: 1.6;
-      border-radius: 8px;
+      font-size: 1.9rem;
+      font-weight: bold;
+      border-radius: 10px;
       background-color: #0074F1;
       color: white;
       text-decoration: none;
       cursor: pointer;
-      text-align: left;
+      text-align: center;
       transition: transform 0.2s;
     }
 
@@ -131,6 +130,7 @@
         font-size: 2rem;
         padding: 30px;
         line-height: 2.2;
+        text-align: center;
       }
 
       .header img {
@@ -227,14 +227,14 @@
         const start = new Date(sessionDate);
         const end = new Date(sessionDate);
         start.setHours(sh, sm);
-        end.setHours(eh, em + 10); // grace
+        end.setHours(eh, em + 10); // 10 min grace
 
         if (now >= start && now <= end) {
           const a = document.createElement("a");
           a.className = "button";
           a.href = s.formUrl;
           a.target = "_blank";
-          a.innerHTML = `🔹 ${s.title}`;
+          a.innerHTML = s.title;
           liveContainer.appendChild(a);
           liveCount++;
         }
@@ -242,7 +242,7 @@
 
       if (liveCount > 0) {
         marquee.style.display = "block";
-        liveMessage.innerHTML = "🔴 LIVE NOW: Click on the session you have atteneded to provide your valuable feedback. The link will remain active for 10 minutes post-session.";
+        liveMessage.innerHTML = "🔴 LIVE NOW: Click on the session you have attended to provide your valuable feedback. The link will remain active for 10 minutes post-session.";
         noLiveText.innerText = "";
       } else {
         marquee.style.display = "none";
